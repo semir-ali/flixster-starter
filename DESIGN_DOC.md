@@ -47,72 +47,83 @@ Create an intuitive, Netflix-inspired movie discovery platform that helps users 
 
 ### Core User Journey (MVP)
 
-This diagram shows the primary user flow through the application:
+This diagram shows the primary user flow through the application, with explicit actions labeled on each transition:
 
 ```mermaid
 flowchart TD
-    Start([User Opens Flixster]) --> NowPlaying[Now Playing Grid Loads]
-    NowPlaying --> Choice{User Action?}
+    Start([User Opens Flixster Website<br/>in Browser]) --> NowPlaying["Main Page Loads:<br/>Grid showing 20 'Now Playing' movies<br/>(poster, title, rating for each)"]
+    NowPlaying --> Choice{What does<br/>user do next?}
     
-    Choice -->|Scroll & Click Load More| LoadMore[Append Next Page]
+    Choice -->|"User scrolls to bottom<br/>and clicks 'Load More' button"| LoadMore["Fetch next page from API<br/>(movies 21-40)<br/>and append to grid"]
     LoadMore --> NowPlaying
     
-    Choice -->|Click Movie Card| Modal[Movie Modal Opens]
-    Modal --> FetchDetails[Fetch Movie Details API]
-    FetchDetails --> FetchAI[Fetch AI Recommendation]
-    FetchAI --> DisplayModal[Display Modal Content]
-    DisplayModal --> CloseModal{Close Modal?}
-    CloseModal -->|Yes| NowPlaying
-    CloseModal -->|No| DisplayModal
+    Choice -->|"User clicks on any<br/>MovieCard in grid"| Modal["Modal window opens<br/>overlaying the page"]
+    Modal -->|"Automatically fetches<br/>movie details from TMDb"| FetchDetails["Loading spinner shows<br/>while fetching runtime,<br/>genres, backdrop"]
+    FetchDetails -->|"Details received,<br/>now fetch AI insight"| FetchAI["Loading message:<br/>'✨ Getting a recommendation...'<br/>calls OpenRouter API"]
+    FetchAI -->|"AI response received"| DisplayModal["Modal displays:<br/>- Backdrop image<br/>- Title, runtime, date, genres<br/>- Overview<br/>- AI recommendation"]
+    DisplayModal --> CloseModal{How does<br/>modal close?}
+    CloseModal -->|"User clicks X button,<br/>presses Escape key,<br/>or clicks outside modal"| NowPlaying
+    CloseModal -->|"User still reading"| DisplayModal
     
-    Choice -->|Type in Search| SearchInput[Update Search Query]
-    SearchInput --> Submit{Submit Search?}
-    Submit -->|Yes| SearchAPI[Fetch Search Results]
-    SearchAPI --> SearchView[Display Search Results]
-    SearchView --> SearchChoice{User Action?}
-    SearchChoice -->|Load More| SearchPaginate[Append Search Page]
+    Choice -->|"User types movie name<br/>in search bar at top"| SearchInput["Search query updates<br/>as user types<br/>(controlled input)"]
+    SearchInput --> Submit{Does user<br/>submit search?}
+    Submit -->|"User presses Enter<br/>or clicks Search button"| SearchAPI["Clear current movies,<br/>fetch from TMDb Search API<br/>with query term"]
+    SearchAPI --> SearchView["Search Results Page:<br/>Grid showing matching movies<br/>(same layout as Now Playing)"]
+    SearchView --> SearchChoice{What does<br/>user do next?}
+    SearchChoice -->|"User scrolls and clicks<br/>'Load More' button"| SearchPaginate["Fetch next page<br/>of search results<br/>and append to grid"]
     SearchPaginate --> SearchView
-    SearchChoice -->|Click Card| Modal
-    SearchChoice -->|Clear Search| NowPlaying
+    SearchChoice -->|"User clicks any<br/>MovieCard in results"| Modal
+    SearchChoice -->|"User clicks 'Now Playing' button<br/>or clears search bar"| NowPlaying
     
-    Choice -->|Select Sort Option| Sort[Sort Current Movies]
+    Choice -->|"User selects option from<br/>Sort dropdown menu"| Sort["Re-order currently loaded movies by:<br/>- Title (A-Z)<br/>- Release Date (Newest)<br/>- Vote Average (Highest)"]
     Sort --> NowPlaying
 ```
 
 ### Modal Data Flow (Sequence Diagram)
 
-This diagram illustrates how data flows when a user clicks a movie card:
+This diagram illustrates the technical flow when a user clicks a movie card, showing each component interaction and API call:
 
 ```mermaid
 sequenceDiagram
-    participant User
-    participant MovieCard
-    participant App
-    participant TMDb API
-    participant OpenRouter
-    participant MovieModal
+    participant User as User<br/>(Browser)
+    participant MovieCard as MovieCard<br/>Component
+    participant App as App<br/>Component<br/>(Parent State)
+    participant TMDb as TMDb API<br/>(Movie Database)
+    participant OpenRouter as OpenRouter API<br/>(AI Service)
+    participant MovieModal as MovieModal<br/>Component
 
-    User->>MovieCard: Clicks card
-    MovieCard->>App: onMovieClick(movieId)
-    App->>App: setSelectedMovieId(movieId)
-    App->>MovieModal: Renders with movieId prop
+    Note over User,MovieModal: User clicks a movie poster in the grid
+    User->>MovieCard: Clicks on movie card
+    MovieCard->>App: Calls onMovieClick(movieId=12345)
+    Note over App: Stores which movie to show
+    App->>App: setSelectedMovieId(12345)
+    Note over App: Conditional rendering triggers
+    App->>MovieModal: Renders MovieModal with movieId=12345
     
-    MovieModal->>MovieModal: useEffect triggers on movieId
-    MovieModal->>TMDb API: GET /movie/{id}
-    TMDb API-->>MovieModal: Movie details (runtime, genres, etc)
-    MovieModal->>MovieModal: setMovieDetails(details)
+    Note over MovieModal: React useEffect detects movieId changed
+    MovieModal->>MovieModal: useEffect: movieId changed, start fetch
+    Note over MovieModal,TMDb: Fetch full movie details (runtime, genres)
+    MovieModal->>TMDb: GET /movie/12345?api_key=...
+    TMDb-->>MovieModal: Returns: {title, runtime, genres, backdrop_path, overview}
+    MovieModal->>MovieModal: setMovieDetails(response data)
     
-    MovieModal->>MovieModal: useEffect triggers on details
-    MovieModal->>OpenRouter: POST with title, genres, overview
-    OpenRouter-->>MovieModal: AI recommendation text
-    MovieModal->>MovieModal: setAiInsight(text)
+    Note over MovieModal: React useEffect detects movieDetails loaded
+    MovieModal->>MovieModal: useEffect: details ready, get AI insight
+    Note over MovieModal,OpenRouter: Request AI recommendation with movie context
+    MovieModal->>OpenRouter: POST /chat/completions<br/>Body: {title, genres, overview}
+    OpenRouter-->>MovieModal: Returns: "This thriller keeps you on edge..."
+    MovieModal->>MovieModal: setAiInsight(AI response text)
     
-    MovieModal->>User: Displays complete modal
+    Note over MovieModal,User: All data loaded, display complete modal
+    MovieModal->>User: Displays modal with:<br/>- Backdrop<br/>- Title, runtime, date, genres<br/>- Overview<br/>- AI recommendation
     
-    User->>MovieModal: Clicks close button
-    MovieModal->>App: onClose()
+    Note over User,MovieModal: User finishes reading and closes modal
+    User->>MovieModal: Clicks X button, Escape, or outside click
+    MovieModal->>App: Calls onClose() callback
+    Note over App: Clear the selected movie ID
     App->>App: setSelectedMovieId(null)
-    App->>App: Modal unmounts, state cleared
+    Note over App: Modal unmounts, all state cleared
+    App->>App: MovieModal no longer renders
 ```
 
 ---
