@@ -7,6 +7,8 @@ function MovieCard({ movie, onClick }) {
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : null;
 
+  const year = movie.release_date ? new Date(movie.release_date).getFullYear() : null;
+
   return (
     <div className="movie-card" onClick={onClick}>
       <div className="movie-card__poster">
@@ -26,8 +28,11 @@ function MovieCard({ movie, onClick }) {
       <div className="movie-card__info">
         <h3 className="movie-card__title">{movie.title}</h3>
         <div className="movie-card__rating">
-          <span className="rating-star">⭐</span>
-          <span className="rating-value">{movie.vote_average.toFixed(1)}</span>
+          <div className="movie-card__rating-left">
+            <span className="rating-star">⭐</span>
+            <span className="rating-value">{movie.vote_average.toFixed(1)}</span>
+          </div>
+          {year && <span className="movie-card__year">{year}</span>}
         </div>
       </div>
     </div>

@@ -1,3 +1,35 @@
+### Visual Design Intent
+
+Component Name: Header
+Horizontal navigation bar that holds the logo and navigation links which aims to copy Netflix's style. Has a movie-like logo with the text Flixster to establish brand and is gray to fit the darker color scheme of the website.
+
+Component Name: App Background
+The app background has a black background which creates high contrast with movie posters and UI elements.
+
+Component Name: MovieCard
+Transparent card with rounded poster image that lifts and scales on hover. This component alluminates its associated movie details.
+
+Component Name: SearchBar
+An input field with a somewhat subtle grey to differentiate from the black background that the user can type white text into.
+
+Component Name: SortDropdown
+Similar to the SearchBar with a subtle grey that also contrasts with the darker grey.
+
+Component Name: MovieList
+CSS organized grid of MovieCards which, by default, is 7 movies per row. 
+
+Component Name: Movie Count
+Small gray text displaying "X movies found" above the grid which tells user about the results of the website.
+
+Component Name: LoadMoreButton
+Transparent ellipse-like button which helps the user generate more movies; text is fully capitalized to emphasize its existence.
+
+Component Name: Footer
+Small footer with dark grey background and light grey text, including link to the TDMb (the think will be red to contrast with the light grey text).
+
+Component Name: MovieModal
+Centered overlay which has a background blur and is at a 16:7 aspect ratio for the backdrop image. This overlay contains information about the movie's title, metadata, genre, and overview text.
+
 ### Component Architecture
 App Component:
 1. Responsibility: The main component that coordinates state and renders all child components

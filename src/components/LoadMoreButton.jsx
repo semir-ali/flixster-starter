@@ -1,6 +1,6 @@
 import './LoadMoreButton.css';
 
-function LoadMoreButton({ onLoadMore, isLoading, isVisible }) {
+function LoadMoreButton({ onLoadMore, isLoading, isVisible, remainingCount }) {
   if (!isVisible) {
     return null;
   }
@@ -12,7 +12,7 @@ function LoadMoreButton({ onLoadMore, isLoading, isVisible }) {
         onClick={onLoadMore}
         disabled={isLoading}
       >
-        {isLoading ? 'Loading...' : 'Load More'}
+        {isLoading ? 'Loading...' : remainingCount ? `Load More (${remainingCount} remaining)` : 'Load More'}
       </button>
     </div>
   );

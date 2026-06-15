@@ -171,6 +171,12 @@ function MovieList({ onMovieClick }) {
         <div className="movie-list-loading">Loading movies...</div>
       ) : (
         <>
+          {sortedMovies.length > 0 && (
+            <div className="movie-count">
+              {sortedMovies.length} {sortedMovies.length === 1 ? 'movie' : 'movies'} found
+            </div>
+          )}
+
           <div className="movie-list">
             {sortedMovies.map((movie) => (
               <MovieCard
@@ -185,6 +191,7 @@ function MovieList({ onMovieClick }) {
             onLoadMore={handleLoadMore}
             isLoading={isLoading}
             isVisible={currentPage < totalPages}
+            remainingCount={totalPages > currentPage ? (totalPages - currentPage) * 20 : 0}
           />
         </>
       )}
