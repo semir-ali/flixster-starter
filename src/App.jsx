@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import Header from './components/Header'
 import MovieList from './components/MovieList'
 import MovieModal from './components/MovieModal'
+import Footer from './components/Footer'
 import './App.css'
 
 const App = () => {
@@ -16,7 +18,11 @@ const App = () => {
 
   return (
     <div className="App">
-      <MovieList onMovieClick={handleMovieClick} />
+      <Header />
+      <main>
+        <MovieList onMovieClick={handleMovieClick} />
+      </main>
+      <Footer />
       {selectedMovieId && (
         <MovieModal movieId={selectedMovieId} onClose={handleCloseModal} />
       )}
