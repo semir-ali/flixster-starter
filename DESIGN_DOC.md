@@ -3,8 +3,7 @@
 **Project:** Flixster Movie Discovery Platform  
 **Author:** Semir Ali  
 **Date:** June 14, 2026  
-**Version:** 1.0  
-**Due Date:** June 16, 2026 (Core Requirements)
+**Version:** 1.0 
 
 ---
 
@@ -45,7 +44,7 @@ Create an intuitive, Netflix-inspired movie discovery platform that helps users 
 
 ## Visual Architecture
 
-### Core User Journey (MVP)
+### Core User Journey
 
 This diagram shows the primary user flow through the application, with explicit actions labeled on each transition:
 
@@ -130,14 +129,14 @@ sequenceDiagram
 
 ## User Flows
 
-### 1. First-Time User Flow (Stretch Feature)
+### 1. First-Time User Flow 
 1. User opens Flixster
 2. Onboarding modal appears: "What are your favorite genres?"
 3. User selects 2-5 genres from a list
 4. Preferences saved to localStorage
 5. User lands on personalized Home Screen with genre-based sections
 
-### 2. Core Discovery Flow (MVP)
+### 2. Core Discovery Flow 
 1. User lands on main page showing "Now Playing" movies in a grid
 2. User scrolls through movies, clicks "Load More" to see additional pages
 3. User clicks a MovieCard → Modal opens with details + AI recommendation
@@ -145,14 +144,14 @@ sequenceDiagram
 5. User enters search query → View switches to Search Results
 6. User clicks "Now Playing" or clears search → Returns to Now Playing view
 
-### 3. Search Flow (MVP)
+### 3. Search Flow 
 1. User types movie title in search bar
 2. Search results update in real-time (or on submit)
 3. Results displayed in same grid layout
 4. User can sort results by title, release date, or vote average
 5. "Load More" button appends additional search result pages
 
-### 4. Favorites & Watched Flow (Stretch Feature)
+### 4. Favorites & Watched Flow 
 1. User hovers over MovieCard → "Heart" icon and "Watched" checkbox appear
 2. User clicks heart → Movie added to Favorites (saved to localStorage)
 3. User clicks watched → Movie marked as Watched (saved to localStorage)
@@ -160,7 +159,7 @@ sequenceDiagram
 5. User navigates to Watched page → See all watched movies
 6. Favorited/watched movies display visual indicator (filled heart, checkmark badge)
 
-### 5. Recommendation System Flow (Stretch Feature)
+### 5. Recommendation System Flow 
 1. User lands on Home Screen (different from main page)
 2. 8 category sections displayed:
    - "Now Playing" (required)
@@ -179,7 +178,7 @@ sequenceDiagram
 
 ## Feature Requirements
 
-### Core Features (MVP - Due June 16)
+### Core Features 
 
 #### F1: Display Movies (Now Playing)
 - **Description**: Fetch and display movies currently playing in theaters
@@ -292,7 +291,7 @@ sequenceDiagram
 
 ---
 
-### Stretch Features (Post-Submission)
+### Features 
 
 #### S1: React Router - Multi-Page Navigation
 - **Pages**:
@@ -475,7 +474,7 @@ This section documents key architectural choices, the options considered, and th
 
 ---
 
-### Decision #4: Favorites/Watched Persistence (Stretch)
+### Decision #4: Favorites/Watched Persistence 
 
 **Context**: How should favorites and watched movies be stored?
 
@@ -509,7 +508,7 @@ This section documents key architectural choices, the options considered, and th
 
 ---
 
-### Decision #5: App Structure - Multi-Page vs Single-Page (Stretch)
+### Decision #5: App Structure - Multi-Page vs Single-Page 
 
 **Context**: Should the app use React Router for separate pages, or conditional rendering on one page?
 
@@ -520,7 +519,7 @@ This section documents key architectural choices, the options considered, and th
 | **A: Multi-Page with Router** | Separate routes: `/`, `/search`, `/favorites`, `/watched` | ✅ Clear URL structure<br/>✅ Browser back/forward works<br/>✅ Easier to add pages later<br/>✅ Better for SEO (if relevant) | ❌ More setup (install Router)<br/>❌ Slightly more complex state management |
 | **B: Single-Page with Conditional Rendering** | One component, show/hide sections based on state | ✅ Simpler (no Router)<br/>✅ Faster transitions<br/>✅ Less boilerplate | ❌ No URL history<br/>❌ Harder to share specific views<br/>❌ Less scalable |
 
-**Decision**: **Option A - Multi-Page with React Router** (Stretch Feature)
+**Decision**: **Option A - Multi-Page with React Router** 
 
 **Rationale**:
 - Better user experience (back button works intuitively)
@@ -594,7 +593,7 @@ App
   - `selectedMovieId` (number | null): ID of movie for modal
   - `isLoading` (boolean): Loading state for movie fetch
   - `error` (string | null): Error message if fetch fails
-  - `mode` (string): "now_playing" | "search" (MVP)
+  - `mode` (string): "now_playing" | "search" 
   - `favorites` (array): Array of favorited movie IDs (stretch, from localStorage)
   - `watched` (array): Array of watched movie IDs (stretch, from localStorage)
   - `userGenres` (array): User's favorite genre IDs (stretch, from localStorage)
@@ -818,7 +817,7 @@ GET https://api.themoviedb.org/3/movie/550?api_key=YOUR_KEY
 
 ---
 
-### API 4: Similar Movies (Stretch)
+### API 4: Similar Movies 
 **Endpoint**: `GET /movie/{movie_id}/similar`
 
 **Purpose**: Get movies similar to a given movie
@@ -838,7 +837,7 @@ GET https://api.themoviedb.org/3/movie/550/similar?api_key=YOUR_KEY
 
 ---
 
-### API 5: Discover Movies by Genre (Stretch)
+### API 5: Discover Movies by Genre 
 **Endpoint**: `GET /discover/movie`
 
 **Purpose**: Discover movies filtered by genre
@@ -859,7 +858,7 @@ GET https://api.themoviedb.org/3/discover/movie?api_key=YOUR_KEY&with_genres=28&
 
 ---
 
-### API 6: Top Rated Movies (Stretch)
+### API 6: Top Rated Movies 
 **Endpoint**: `GET /movie/top_rated`
 
 **Purpose**: Fetch highest-rated movies
@@ -878,7 +877,7 @@ GET https://api.themoviedb.org/3/movie/top_rated?api_key=YOUR_KEY&page=1
 
 ---
 
-### API 7: Movie Videos/Trailers (Stretch)
+### API 7: Movie Videos/Trailers 
 **Endpoint**: `GET /movie/{movie_id}/videos`
 
 **Purpose**: Fetch trailers and videos for a movie
@@ -905,7 +904,7 @@ GET https://api.themoviedb.org/3/movie/550/videos?api_key=YOUR_KEY
 
 ---
 
-### API 8: Genre List (Stretch)
+### API 8: Genre List 
 **Endpoint**: `GET /genre/movie/list`
 
 **Purpose**: Get list of all movie genres for onboarding
@@ -1008,7 +1007,7 @@ const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
 | `error` | `string \| null` | `null` | App | Fetch fails | Error message display |
 | `mode` | `string` | `"now_playing"` | App | Search submitted, Clear clicked | Determines which API to call |
 
-### Stretch Features State (App Component)
+### Features State (App Component)
 
 | State Variable | Type | Initial Value | Owner | Update Trigger | Used By |
 |---|---|---|---|---|---|
@@ -1029,13 +1028,13 @@ const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
 | `isLoadingInsight` | `boolean` | `false` | MovieModal | AI call starts/ends | Loading message ("✨ Getting...") |
 | `trailer` | `object \| null` | `null` | MovieModal (stretch) | Fetch videos | Trailer embed |
 
-#### CategorySection State (Stretch)
+#### CategorySection State 
 
 | State Variable | Type | Initial Value | Owner | Update Trigger | Used By |
 |---|---|---|---|---|---|
 | `scrollPosition` | `number` | `0` | CategorySection | User scrolls carousel | Carousel animation |
 
-### localStorage Keys (Stretch Features)
+### localStorage Keys (Features)
 
 | Key | Type | Description | Read On | Written On |
 |---|---|---|---|---|
@@ -1239,7 +1238,7 @@ const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
 - **Gap**: 16-24px between cards
 - **Technique**: CSS Grid with `repeat(auto-fill, minmax(200px, 1fr))`
 
-#### Carousel Layout (Stretch)
+#### Carousel Layout 
 - **Direction**: Horizontal scroll
 - **Overflow**: `overflow-x: scroll` or `overflow-x: auto`
 - **Scroll Behavior**: `scroll-behavior: smooth`
@@ -1350,7 +1349,7 @@ const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
 - **Scenario**: OpenRouter returns error or times out
 - **Handling**: Display fallback message, log error, don't break modal
 
-### No Trailers Available (Stretch)
+### No Trailers Available 
 - **Scenario**: `/videos` endpoint returns empty array
 - **Handling**: Hide trailer section, don't show broken embed
 
@@ -1358,7 +1357,7 @@ const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
 - **Scenario**: User has disabled localStorage (privacy mode)
 - **Handling**: Favorites/watched features still work in-session, but don't persist
 
-### No Favorites/Watched for Recommendations (Stretch)
+### No Favorites/Watched for Recommendations 
 - **Scenario**: User has no favorites or watched movies
 - **Handling**: Fill recommendation sections with random genres
 
@@ -1403,7 +1402,7 @@ const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
 - Update `planning.md` with decisions log
 - Final commit and submission
 
-### Phase 2: Stretch Features (Post-Submission)
+### Phase 2: Features 
 
 **Week 2 (June 17-21):**
 - Set up React Router (install, create routes)
@@ -1476,7 +1475,7 @@ const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY;
 
 ## Testing & Validation Checklist
 
-### Core Features (MVP)
+### Core Features 
 
 - [ ] Now Playing movies load on mount
 - [ ] Grid displays 20 movies per page
@@ -1511,7 +1510,7 @@ const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY;
 - [ ] Semantic HTML used throughout
 - [ ] planning.md exists and covers all 5 sections
 
-### Stretch Features
+### Features
 
 - [ ] React Router installed and configured
 - [ ] SearchPage route works
@@ -1555,7 +1554,7 @@ const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY;
 - **Simple**: Minimal config out of the box
 - **Modern**: ES modules, optimized builds
 
-### Why localStorage for Stretch Features?
+### Why localStorage for Features?
 - **Simple**: No backend required
 - **Sufficient**: For learning project, persistence across sessions
 - **Limitations**: Data visible in DevTools, can be cleared by user, not shareable across devices
@@ -1597,13 +1596,13 @@ const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY;
 
 ## Success Metrics
 
-### Core Features (MVP)
+### Core Features 
 - **Functionality**: All required features work without errors
 - **Code Quality**: Components follow spec, state managed correctly, APIs handled properly
 - **UX**: Responsive, accessible, polished visuals
 - **Documentation**: `planning.md` complete and accurate
 
-### Stretch Features
+### Features
 - **Functionality**: All stretch features work without errors
 - **Persistence**: Favorites/watched persist across sessions
 - **Personalization**: Recommendations adapt to user preferences

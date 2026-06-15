@@ -5,6 +5,9 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  /* Prevent cards from collapsing */
+  min-width: 0;
+  width: 100%;
 }
 
 .movie-card:hover {
@@ -71,4 +74,21 @@
   font-size: 14px;
   font-weight: 500;
   color: #ffd700;
+}
+
+/* Mobile responsiveness - adjust text sizes on very small screens */
+@media (max-width: 400px) {
+  .movie-card__title {
+    font-size: 14px;
+  }
+
+  .movie-card__placeholder {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .rating-star,
+  .rating-value {
+    font-size: 12px;
+  }
 }

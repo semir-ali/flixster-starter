@@ -1,5 +1,13 @@
+/*
+  Responsive Grid Breakpoints:
+  - Mobile (<600px): 1-2 cards per row, smaller cards (150px min)
+  - Tablet (601-1024px): 3-4 cards per row, medium cards (180px min)
+  - Desktop (>1024px): 4-6 cards per row, larger cards (200px min)
+*/
+
 .movie-list {
   display: grid;
+  /* Desktop: auto-fill creates as many columns as fit, each at least 200px */
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 24px;
   padding: 20px;
@@ -19,17 +27,20 @@
   color: #ff6b6b;
 }
 
-/* Responsive breakpoints */
+/* Mobile: <600px - Optimize for phone screens */
 @media (max-width: 600px) {
   .movie-list {
+    /* Smaller min size allows 2 cards to fit on most phones */
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 16px;
     padding: 16px;
   }
 }
 
+/* Tablet: 601-1024px - Optimize for tablets and small laptops */
 @media (min-width: 601px) and (max-width: 1024px) {
   .movie-list {
+    /* Medium size fits 3-4 cards depending on screen width */
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 20px;
   }

@@ -141,6 +141,7 @@ Purpose: Shows the movie's full details (i.e. runtime, genres, backdrop, overvie
 ### Data Flow
 Once the App component mounts, it takes the movie from the TMDb Now Playing endpoint and puts it into the results array (changing its state). Then this information about the movie's raw data (id, title, poster_path, vote_average, and poster_path to the movie's image) can be used to render the MovieCard component. When a user clicks the MovieCard, its onClick handler calls the onClick prop that it got from its parent component (MovieList) which calls onMovieClick (another prop) which passes the ID back up to the App component and also renders the MovieModal such that this movie is displayed.
 
+
 ### AI Feature Spec
 
 Which component will display the AI insight? (Hint: MovieModal)
