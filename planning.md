@@ -190,3 +190,21 @@ The AI should return 2-3 sentences that give a watch recommendation describing w
 
 Where does the AI response live in state?
 The MovieModal component holds the AI response in state, specifically in a variable called aiInsight, which is either a string or null with a default value of null.
+
+Role: What role should the AI play? (e.g., "an enthusiastic but honest film critic")
+The AI should play the role of a film critic who is giving a recommendation to a general audience member about a movie.
+
+Task: What exactly should the AI do? (e.g., "write a 2–3 sentence watch recommendation")
+The AI should give a 2-3 sentence watch recommendation for the given movie.
+
+Inputs: What movie context will you send? (title, genres as a comma-separated list, overview)
+The movie context should include the movie's title, genres, and overview.
+
+Output format: What should the response look like? (plain text, 2–3 sentences, no spoilers, no "I" statements)
+The response should include a plain text 2-3 sentence response which does not have spoilers and "I" statements.
+
+Constraints: What should the AI avoid? (no plot spoilers, no comparisons to other films unless helpful, no generic phrases like "this film is a must-see")
+The AI should avoid plot spoilers, not comparing it to other films, and not have generic phrases since it makes it harder to intepret the feedback.
+
+Failure behavior: What should users see if the AI call fails? (a friendly fallback message, e.g., "We couldn't generate a recommendation for this one — check out the overview above!")
+The AI should say "We couldn't generate a recommendation at this time, check out the overview for more information!"

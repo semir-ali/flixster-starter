@@ -135,6 +135,48 @@
   font-size: 0.9rem;
 }
 
+.modal-ai-section {
+  background: linear-gradient(135deg, rgba(229, 9, 20, 0.08) 0%, rgba(147, 51, 234, 0.08) 100%);
+  border: 1px solid rgba(229, 9, 20, 0.2);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.modal-ai-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.ai-icon {
+  font-size: 1rem;
+}
+
+.modal-ai-header h3 {
+  color: #e50914;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.modal-ai-loading {
+  color: #9ca3af;
+  font-style: italic;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.modal-ai-insight {
+  color: #e2e8f0;
+  font-style: italic;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  margin: 0;
+}
+
 .modal-loading,
 .modal-error {
   padding: 3rem 2rem;

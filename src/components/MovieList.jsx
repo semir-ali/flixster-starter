@@ -16,6 +16,7 @@ function MovieList({ onMovieClick }) {
   const [sortOption, setSortOption] = useState('title');
 
   const API_KEY = import.meta.env.VITE_API_KEY;
+  const AI_API_KEY = import.meta.env.AI_API_KEY;
 
   // Fetch Now Playing movies
   const fetchNowPlaying = async (page) => {
@@ -128,23 +129,33 @@ function MovieList({ onMovieClick }) {
       return index === firstIndex;
     });
 
+    // Filter out movies with missing essential information
+    const validMovies = uniqueMovies.filter(movie => {
+      return (
+        movie.poster_path &&        // Must have a poster image
+        movie.title &&              // Must have a title
+        movie.vote_average != null && // Must have a rating
+        movie.release_date          // Must have a release date
+      );
+    });
+
     switch (sortOption) {
       case 'title':
-        return uniqueMovies.sort((a, b) => a.title.localeCompare(b.title));
+        return validMovies.sort((a, b) => a.title.localeCompare(b.title));
 
       case 'release_date':
-        return uniqueMovies.sort((a, b) => {
+        return validMovies.sort((a, b) => {
           // Newest first (descending order)
-          const dateA = new Date(a.release_date || '1900-01-01');
-          const dateB = new Date(b.release_date || '1900-01-01');
+          const dateA = new Date(a.release_date);
+          const dateB = new Date(b.release_date);
           return dateB - dateA;
         });
 
       case 'vote_average':
-        return uniqueMovies.sort((a, b) => b.vote_average - a.vote_average);
+        return validMovies.sort((a, b) => b.vote_average - a.vote_average);
 
       default:
-        return uniqueMovies;
+        return validMovies;
     }
   };
 

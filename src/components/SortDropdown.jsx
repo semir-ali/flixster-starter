@@ -9,6 +9,7 @@ function SortDropdown({ sortOption, onSortChange }) {
         value={sortOption}
         onChange={(e) => onSortChange(e.target.value)}
         className="sort-select"
+        aria-label="Sort movies by"
       >
         <option value="title">Title (A-Z)</option>
         <option value="release_date">Release Date (Newest)</option>

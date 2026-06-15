@@ -5,10 +5,17 @@
   overflow: hidden;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
 }
 
-.movie-card:hover {
+.movie-card:hover,
+.movie-card:focus {
   transform: translateY(-6px) scale(1.03);
+}
+
+.movie-card:focus {
+  outline: 2px solid #e50914;
+  outline-offset: 4px;
 }
 
 .movie-card__poster {

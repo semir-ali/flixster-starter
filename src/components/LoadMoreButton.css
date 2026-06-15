@@ -29,3 +29,8 @@
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+.load-more-button:focus {
+  outline: 2px solid #e50914;
+  outline-offset: 3px;
+}

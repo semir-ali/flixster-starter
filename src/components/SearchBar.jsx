@@ -36,6 +36,7 @@ function SearchBar({ searchQuery, onSearchChange, onSearchSubmit, onClearSearch,
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           onKeyDown={handleKeyDown}
+          aria-label="Search for movies"
         />
         <button type="submit" className="search-button">
           Search

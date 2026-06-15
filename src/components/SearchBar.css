@@ -80,9 +80,16 @@
   color: white;
 }
 
-.search-button:hover {
+.search-button:hover,
+.search-button:focus {
   background: #c7080f;
   border-color: #c7080f;
+}
+
+.search-button:focus,
+.clear-button:focus {
+  outline: 2px solid #e50914;
+  outline-offset: 2px;
 }
 
 .clear-button {

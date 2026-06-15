@@ -9,8 +9,22 @@ function MovieCard({ movie, onClick }) {
 
   const year = movie.release_date ? new Date(movie.release_date).getFullYear() : null;
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
-    <div className="movie-card" onClick={onClick}>
+    <div
+      className="movie-card"
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label={`View details for ${movie.title}`}
+    >
       <div className="movie-card__poster">
         {posterUrl ? (
           <img
@@ -20,7 +34,7 @@ function MovieCard({ movie, onClick }) {
           />
         ) : (
           <div className="movie-card__placeholder">
-            <span>No Image Available</span>
+            <span>{movie.title}</span>
           </div>
         )}
       </div>
@@ -29,8 +43,10 @@ function MovieCard({ movie, onClick }) {
         <h3 className="movie-card__title">{movie.title}</h3>
         <div className="movie-card__rating">
           <div className="movie-card__rating-left">
-            <span className="rating-star">⭐</span>
-            <span className="rating-value">{movie.vote_average.toFixed(1)}</span>
+            <span className="rating-star" aria-hidden="true">⭐</span>
+            <span className="rating-value" aria-label={`Rating ${movie.vote_average.toFixed(1)} out of 10`}>
+              {movie.vote_average.toFixed(1)}
+            </span>
           </div>
           {year && <span className="movie-card__year">{year}</span>}
         </div>
