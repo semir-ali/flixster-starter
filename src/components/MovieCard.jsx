@@ -1,0 +1,37 @@
+import './MovieCard.css';
+
+function MovieCard({ movie, onClick }) {
+  // Construct the poster image URL
+  // TMDb base URL + size + poster_path
+  const posterUrl = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    : null;
+
+  return (
+    <div className="movie-card" onClick={onClick}>
+      <div className="movie-card__poster">
+        {posterUrl ? (
+          <img
+            src={posterUrl}
+            alt={`${movie.title} poster`}
+            className="movie-card__image"
+          />
+        ) : (
+          <div className="movie-card__placeholder">
+            <span>No Image Available</span>
+          </div>
+        )}
+      </div>
+
+      <div className="movie-card__info">
+        <h3 className="movie-card__title">{movie.title}</h3>
+        <div className="movie-card__rating">
+          <span className="rating-star">⭐</span>
+          <span className="rating-value">{movie.vote_average.toFixed(1)}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default MovieCard;
