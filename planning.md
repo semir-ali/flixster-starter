@@ -3,7 +3,7 @@ App Component:
 1. Responsibility: The main component that coordinates state and renders all child components
 2. Render: Header, SearchBar, SortDropdown, MovieList, LoadMoreButton, MovieModal, Footer
 Props: N/A
-States: searchQuery (string - the current search term), currentPage (number - the current loaded page), totalPages (number - total pages available from the API for the given search term), sortOption (string - which sort selection is chosen), selectedMovieId (Id for the current movie), mode (string - determines whether to call Now Playing or Search API)
+States: searchQuery (string - the current search term), currentPage (number - the current loaded page), totalPages (number - total pages available from the API for the given search term), sortOption (string - which sort selection is chosen), selectedMovieId (number - id for the current movie), mode (string - determines whether to call Now Playing or Search API)
 
 MovieList Component:
 1. Responsibility: Fetch movie data from the API and render each of the movie cards
@@ -18,9 +18,10 @@ MovieCard Component:
 State: N/A
 
 MovieModal Component:
-Responsibility: Show movie information in overlay view including AI-generated recommendation
-Renders: Semi-transparent modal card with a backdrop image, title, runtime, release date, genres, and overview. Along with this, there's an AI recommendation section and close button to close the overlay
-Props: movieId (number - ID of movie that's displayed), onClose (function - handles when modal closes)
+1. Responsibility: Show movie information in overlay view including AI-generated recommendation
+2. Render: Semi-transparent modal overlay with backdrop image, title, runtime, release date, genres, overview, AI recommendation section with loading state, and close button
+3. Props: movieId (number - ID of movie that's displayed), onClose (function - handles when modal closes)
+State: movieDetails (object/null - stores full movie details from TMDb including runtime, genres, backdrop, overview), isLoadingDetails (boolean - whether the movie details API call is in progress), detailsError (string/null - error message if details fetch fails), aiInsight (string/null - stores AI-generated recommendation text), isLoadingInsight (boolean - whether the AI API call is in progress)
 
 Header Component:
 Responsibility: Show the application's title/brand on top of page
@@ -56,7 +57,7 @@ Endpoint: GET /movie/now_playing
 Purpose: Fetch all movies playing current in theaters for main page grid
 URL Example: https://api.themoviedb.org/3/movie/now_playing?api_key=YOUR_KEY&page=1
 Required parameters: API key
-Response Fields Used: page (number - current page displayed), total_pages (number - total pages available), results (array - array of movie objects with id, title, post_path to image, and vote_average)
+Response Fields Used: page (number - current page displayed), total_pages (number - total pages available), results (array - array of movie objects with id, title, poster_path to image, and vote_average)
 Error Cases to Handle: 401 (missing API key), 404 (Invalid endpoint, show "Service unavailable" message), Network Error (Show "Failed to load movies. Check your connection."), poster_path is null (No image to display; show placeholder image)
 
 2. Search Movies API Endpoint
@@ -64,7 +65,7 @@ Endpoint: GET /search/movie
 Purpose: Find movies based on title when the user puts search query
 URL Example: https://api.themoviedb.org/3/search/movie?api_key=YOUR_KEY&query=inception&page=1
 Required parameters: api_key, query_term
-Response Fields Used: page (number - current page), total_pages (number - Total pages available), results (array - array of movie objects including their id, title, poster_path to image, and voter average)
+Response Fields Used: page (number - current page), total_pages (number - total pages available), results (array - array of movie objects including their id, title, poster_path to image, and vote_average)
 Error Cases to Handle: 401 (missing API key), 404 (Invalid endpoint, show "Service unavailable" message), Network Error (Show "Failed to load movies. Check your connection."), empty results array (show no matches found for (query-term))
 
 3. Movie Details API Endpoint
@@ -73,7 +74,7 @@ Purpose: Get specific information for a movie when the modal opens (including it
 URL Example: https://api.themoviedb.org/3/movie/550?api_key=YOUR_KEY
 Required Parameters: api_key, movie_id (movie ID from the path)
 Response Fields Used: movie id, title, backdrop_path, runtime, release_date, genres, and overview
-Error Cases to Handle: 401 (missing API key), 404 (Invalid endpoint, show "Service unavailable" message), Network Error (Show "Failed to load movies. Check your connection."), backdrop is null (use default image), runtime is null (don't show runtime), genres is an empty array (Show "Genre information unavailable)
+Error Cases to Handle: 401 (missing API key), 404 (Invalid endpoint, show "Service unavailable" message), Network Error (Show "Failed to load movies. Check your connection."), backdrop is null (use default image), runtime is null (don't show runtime), genres is an empty array (Show "Genre information unavailable")
 
 
 ### State Architecture
@@ -106,6 +107,8 @@ Type: string
 Initial Value: "title"
 Update Trigger: User chooses from sort dropdown
 Purpose: Decides how to sort movies
+Sort Options: "title" (A-Z alphabetical), "release_date" (newest first), "vote_average" (highest first)
+Sort Transformation: Applied during rendering as a derived copy — does not mutate the movies array in state. Sorting applies only to currently loaded movies (client-side transformation).
 
 selectedMovieId
 Type: number
@@ -131,27 +134,27 @@ Initial Value: "now_playing"
 Update Trigger: Whenever the search is submitted or "Now Playing" is clicked
 Purpose: Determines whether to call Now Playing or Search API
 
-moveDetails
+movieDetails
 Type: object/null
 Initial Value: null
-Update Trigger: TDMb Movie Details API responds
-Purpose: Shows the movie's full details (i.e. runtime, genres, backdrop, overview)
+Update Trigger: TMDb Movie Details API responds
+Purpose: Stores the movie's full details (i.e. runtime, genres, backdrop, overview) in MovieModal component state
 
 
 ### Data Flow
-Once the App component mounts, it takes the movie from the TMDb Now Playing endpoint and puts it into the results array (changing its state). Then this information about the movie's raw data (id, title, poster_path, vote_average, and poster_path to the movie's image) can be used to render the MovieCard component. When a user clicks the MovieCard, its onClick handler calls the onClick prop that it got from its parent component (MovieList) which calls onMovieClick (another prop) which passes the ID back up to the App component and also renders the MovieModal such that this movie is displayed.
+Once the App component mounts, it fetches movies from the TMDb Now Playing endpoint and stores them in the movies array. This information about each movie's raw data (id, title, poster_path, vote_average) is used to render MovieCard components. When a user clicks a MovieCard, its onClick handler calls the onClick prop received from its parent component (MovieList), which calls onMovieClick (another prop) that passes the movie ID back up to the App component. The App then sets selectedMovieId, which triggers the MovieModal to render and display that movie's details.
 
 
 ### AI Feature Spec
 
 Which component will display the AI insight? (Hint: MovieModal)
-The MovieModal will have display the AI insight.
+The MovieModal will display the AI insight.
 
 What movie data will you send to the AI as context? (title, genres, overview)
-The context necessary are the title, genres, and overview.
+The necessary context includes the title, genres, and overview.
 
 What do you want the AI to return? (e.g., a 2–3 sentence "watch recommendation")
-The AI should return 2-3 sentence that gives a watch recommendation that describes whether if the movie should be watched NOT including spoilers or generic phrases
+The AI should return 2-3 sentences that give a watch recommendation describing whether the movie should be watched, WITHOUT including spoilers or generic phrases.
 
 Where does the AI response live in state?
-The MovieModal component should hold the AI response in state, specifically in a variable called aiInsight which is a string/null with the default value of null.
+The MovieModal component holds the AI response in state, specifically in a variable called aiInsight, which is either a string or null with a default value of null.

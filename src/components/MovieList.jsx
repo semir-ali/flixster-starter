@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import MovieCard from './MovieCard';
 import LoadMoreButton from './LoadMoreButton';
 import SearchBar from './SearchBar';
+import SortDropdown from './SortDropdown';
 import './MovieList.css';
 
 function MovieList({ onMovieClick }) {
@@ -12,6 +13,7 @@ function MovieList({ onMovieClick }) {
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [mode, setMode] = useState('now_playing'); // 'now_playing' or 'search'
+  const [sortOption, setSortOption] = useState('title');
 
   const API_KEY = import.meta.env.VITE_API_KEY;
 
@@ -117,6 +119,37 @@ function MovieList({ onMovieClick }) {
     fetchNowPlaying(1);
   };
 
+  // Sort movies based on current sortOption
+  const getSortedMovies = () => {
+    // Remove duplicates: keep only the first occurrence of each movie ID
+    const uniqueMovies = movies.filter((movie, index) => {
+      // Check if this is the first time we're seeing this movie ID
+      const firstIndex = movies.findIndex(m => m.id === movie.id);
+      return index === firstIndex;
+    });
+
+    switch (sortOption) {
+      case 'title':
+        return uniqueMovies.sort((a, b) => a.title.localeCompare(b.title));
+
+      case 'release_date':
+        return uniqueMovies.sort((a, b) => {
+          // Newest first (descending order)
+          const dateA = new Date(a.release_date || '1900-01-01');
+          const dateB = new Date(b.release_date || '1900-01-01');
+          return dateB - dateA;
+        });
+
+      case 'vote_average':
+        return uniqueMovies.sort((a, b) => b.vote_average - a.vote_average);
+
+      default:
+        return uniqueMovies;
+    }
+  };
+
+  const sortedMovies = getSortedMovies();
+
   return (
     <>
       <SearchBar
@@ -127,6 +160,11 @@ function MovieList({ onMovieClick }) {
         mode={mode}
       />
 
+      <SortDropdown
+        sortOption={sortOption}
+        onSortChange={setSortOption}
+      />
+
       {error ? (
         <div className="movie-list-error">{error}</div>
       ) : movies.length === 0 && isLoading ? (
@@ -134,7 +172,7 @@ function MovieList({ onMovieClick }) {
       ) : (
         <>
           <div className="movie-list">
-            {movies.map((movie) => (
+            {sortedMovies.map((movie) => (
               <MovieCard
                 key={movie.id}
                 movie={movie}
