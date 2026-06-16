@@ -1,12 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import ActorModal from './ActorModal';
 import './MovieModal.css';
 
-function MovieModal({ movieId, onClose }) {
+function MovieModal({ movieId, onClose, onMovieClick }) {
   const [movieDetails, setMovieDetails] = useState(null);
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [detailsError, setDetailsError] = useState(null);
   const [aiInsight, setAiInsight] = useState(null);
   const [isLoadingInsight, setIsLoadingInsight] = useState(false);
+  const [trailer, setTrailer] = useState(null);
+  const [cast, setCast] = useState([]);
+  const [similarMovies, setSimilarMovies] = useState([]);
+  const [selectedActorId, setSelectedActorId] = useState(null);
+  const similarScrollRef = useRef(null);
 
   const API_KEY = import.meta.env.VITE_API_KEY;
   const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY;
@@ -39,6 +45,81 @@ function MovieModal({ movieId, onClose }) {
 
     fetchMovieDetails();
   }, [movieId, API_KEY]);
+
+  // Fetch trailer and cast when movie details are loaded
+  useEffect(() => {
+    if (!movieDetails) return;
+
+    const fetchTrailer = async () => {
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}`
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch trailer');
+        }
+
+        const data = await response.json();
+
+        // Find the first YouTube trailer
+        const youtubeTrailer = data.results.find(
+          video => video.site === 'YouTube' && video.type === 'Trailer'
+        );
+
+        if (youtubeTrailer) {
+          setTrailer(youtubeTrailer);
+        }
+      } catch (error) {
+        console.error('Error fetching trailer:', error);
+        // Silently fail - trailer section will be hidden
+      }
+    };
+
+    const fetchCast = async () => {
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${API_KEY}`
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch cast');
+        }
+
+        const data = await response.json();
+
+        // Get top 6 cast members
+        setCast(data.cast.slice(0, 6));
+      } catch (error) {
+        console.error('Error fetching cast:', error);
+        // Silently fail - cast section will be hidden
+      }
+    };
+
+    const fetchSimilarMovies = async () => {
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${API_KEY}&page=1`
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch similar movies');
+        }
+
+        const data = await response.json();
+
+        // Get top 12 similar movies
+        setSimilarMovies(data.results.slice(0, 12));
+      } catch (error) {
+        console.error('Error fetching similar movies:', error);
+        // Silently fail - similar movies section will be hidden
+      }
+    };
+
+    fetchTrailer();
+    fetchCast();
+    fetchSimilarMovies();
+  }, [movieDetails, movieId, API_KEY]);
 
   // Fetch AI insight when movie details are loaded
   useEffect(() => {
@@ -132,6 +213,25 @@ function MovieModal({ movieId, onClose }) {
     }
   };
 
+  // Scroll functions for similar movies carousel
+  const scrollSimilarLeft = () => {
+    if (similarScrollRef.current) {
+      similarScrollRef.current.scrollBy({
+        left: -400,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const scrollSimilarRight = () => {
+    if (similarScrollRef.current) {
+      similarScrollRef.current.scrollBy({
+        left: 400,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const backdropUrl = movieDetails?.backdrop_path
     ? `https://image.tmdb.org/t/p/original${movieDetails.backdrop_path}`
     : null;
@@ -209,6 +309,62 @@ function MovieModal({ movieId, onClose }) {
                 </div>
               )}
 
+              {/* Cast Section */}
+              {cast.length > 0 && (
+                <div className="modal-cast-section">
+                  <h3>Cast</h3>
+                  <div className="modal-cast-grid">
+                    {cast.map((actor) => (
+                      <div
+                        key={actor.id}
+                        className="cast-member"
+                        onClick={() => setSelectedActorId(actor.id)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setSelectedActorId(actor.id);
+                          }
+                        }}
+                      >
+                        {actor.profile_path ? (
+                          <img
+                            src={`https://image.tmdb.org/t/p/w185${actor.profile_path}`}
+                            alt={actor.name}
+                            className="cast-photo"
+                          />
+                        ) : (
+                          <div className="cast-photo-placeholder">
+                            <span>👤</span>
+                          </div>
+                        )}
+                        <div className="cast-info">
+                          <p className="cast-name">{actor.name}</p>
+                          <p className="cast-character">{actor.character}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Trailer Section */}
+              {trailer && (
+                <div className="modal-trailer-section">
+                  <h3>Trailer</h3>
+                  <div className="modal-trailer-container">
+                    <iframe
+                      src={`https://www.youtube.com/embed/${trailer.key}`}
+                      title={`${movieDetails.title} trailer`}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="modal-trailer-iframe"
+                    ></iframe>
+                  </div>
+                </div>
+              )}
+
               {/* AI Recommendation Section */}
               <div className="modal-ai-section">
                 <div className="modal-ai-header">
@@ -221,10 +377,85 @@ function MovieModal({ movieId, onClose }) {
                   <p className="modal-ai-insight">{aiInsight}</p>
                 ) : null}
               </div>
+
+              {/* Similar Movies Section */}
+              {similarMovies.length > 0 && (
+                <div className="modal-similar-section">
+                  <h3>If you like this movie, you may also like...</h3>
+                  <div className="modal-similar-carousel-container">
+                    <button
+                      className="modal-similar-nav-btn left"
+                      onClick={scrollSimilarLeft}
+                      aria-label="Scroll left"
+                    >
+                      ‹
+                    </button>
+
+                    <div className="modal-similar-carousel" ref={similarScrollRef}>
+                      {similarMovies.map((movie) => (
+                        <div
+                          key={movie.id}
+                          className="similar-movie-card"
+                          onClick={() => {
+                            if (onMovieClick) {
+                              onMovieClick(movie.id);
+                            }
+                          }}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              if (onMovieClick) {
+                                onMovieClick(movie.id);
+                              }
+                            }
+                          }}
+                        >
+                          {movie.poster_path ? (
+                            <img
+                              src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
+                              alt={`${movie.title} poster`}
+                              className="similar-movie-poster"
+                            />
+                          ) : (
+                            <div className="similar-movie-placeholder">
+                              <span>🎬</span>
+                            </div>
+                          )}
+                          <div className="similar-movie-info">
+                            <p className="similar-movie-title">{movie.title}</p>
+                            <div className="similar-movie-rating">
+                              <span className="rating-star">⭐</span>
+                              <span className="rating-value">{movie.vote_average.toFixed(1)}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <button
+                      className="modal-similar-nav-btn right"
+                      onClick={scrollSimilarRight}
+                      aria-label="Scroll right"
+                    >
+                      ›
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </>
         ) : null}
       </div>
+
+      {selectedActorId && (
+        <ActorModal
+          actorId={selectedActorId}
+          onClose={() => setSelectedActorId(null)}
+          onMovieClick={onMovieClick}
+        />
+      )}
     </div>
   );
 }

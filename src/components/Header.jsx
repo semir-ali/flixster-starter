@@ -1,30 +1,45 @@
+import { Link, useLocation } from 'react-router-dom';
 import './Header.css';
 
 function Header() {
+  const location = useLocation();
+
   return (
     <header className="header">
       <div className="header-content">
-        <div className="header-logo">
+        <Link to="/" className="header-logo">
           <span className="logo-icon">🎬</span>
           <span className="logo-text">Flixster</span>
-        </div>
+        </Link>
         <nav className="header-nav">
-          <a href="#" className="nav-link">
+          <Link
+            to="/"
+            className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
+          >
             <span className="nav-icon">🏠</span>
             Home
-          </a>
-          <a href="#" className="nav-link active">
+          </Link>
+          <Link
+            to="/search"
+            className={`nav-link ${location.pathname === '/search' ? 'active' : ''}`}
+          >
             <span className="nav-icon">🔍</span>
             Search
-          </a>
-          <a href="#" className="nav-link">
+          </Link>
+          <Link
+            to="/favorites"
+            className={`nav-link ${location.pathname === '/favorites' ? 'active' : ''}`}
+          >
             <span className="nav-icon">❤️</span>
             Favorites
-          </a>
-          <a href="#" className="nav-link">
+          </Link>
+          <Link
+            to="/watched"
+            className={`nav-link ${location.pathname === '/watched' ? 'active' : ''}`}
+          >
             <span className="nav-icon">✓</span>
             Watched
-          </a>
+          </Link>
         </nav>
       </div>
     </header>

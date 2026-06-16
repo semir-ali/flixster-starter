@@ -208,3 +208,10 @@ The AI should avoid plot spoilers, not comparing it to other films, and not have
 
 Failure behavior: What should users see if the AI call fails? (a friendly fallback message, e.g., "We couldn't generate a recommendation for this one — check out the overview above!")
 The AI should say "We couldn't generate a recommendation at this time, check out the overview for more information!"
+
+### Decisions Log
+
+- **What the API returned initially:** I initially did not have the API return anything because I had issues with the model that I was using. From there, I had some issues with the API model spoiling the movie, which I definitely do not want to have for the AI's API recommendation.
+- **What I changed in my prompt:** I added a note that when avoiding spoilers to avoid implicit spoilers, just to prevent any spoilers of any kind.
+- **What fallback behavior I implemented:** I added a note about any HTTP errors that occur when fetching, an error for if there's a network error (mentioning that it failed to load movie details), an error if there's a OpenRouter API error from the rate limit, and an error if there's any errors fetching from the OpenRouter API
+- **What I learned:** I learned that it's important to be very explicit about a prompt, focusing on things like having the AI play a specific role while building the website. 

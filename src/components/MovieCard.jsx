@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import './MovieCard.css';
 
-function MovieCard({ movie, onClick }) {
+const MovieCard = memo(function MovieCard({ movie, onClick, isFavorited, isWatched, onToggleFavorite, onToggleWatched }) {
   // Construct the poster image URL
   // TMDb base URL + size + poster_path
   const posterUrl = movie.poster_path
@@ -13,6 +14,20 @@ function MovieCard({ movie, onClick }) {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       onClick();
+    }
+  };
+
+  const handleFavoriteClick = (e) => {
+    e.stopPropagation();
+    if (onToggleFavorite) {
+      onToggleFavorite(movie.id);
+    }
+  };
+
+  const handleWatchedClick = (e) => {
+    e.stopPropagation();
+    if (onToggleWatched) {
+      onToggleWatched(movie.id);
     }
   };
 
@@ -37,6 +52,38 @@ function MovieCard({ movie, onClick }) {
             <span>{movie.title}</span>
           </div>
         )}
+
+        {onToggleFavorite && onToggleWatched && (
+          <div className="movie-card__actions">
+            <button
+              className={`action-button favorite-button ${isFavorited ? 'active' : ''}`}
+              onClick={handleFavoriteClick}
+              aria-label={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+              title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+            >
+              {isFavorited ? '❤️' : '🤍'}
+            </button>
+            <button
+              className={`action-button watched-button ${isWatched ? 'active' : ''}`}
+              onClick={handleWatchedClick}
+              aria-label={isWatched ? 'Mark as unwatched' : 'Mark as watched'}
+              title={isWatched ? 'Mark as unwatched' : 'Mark as watched'}
+            >
+              {isWatched ? '✓' : '○'}
+            </button>
+          </div>
+        )}
+
+        {isFavorited && (
+          <div className="movie-card__badge favorite-badge" aria-label="Favorited">
+            ❤️
+          </div>
+        )}
+        {isWatched && (
+          <div className="movie-card__badge watched-badge" aria-label="Watched">
+            ✓
+          </div>
+        )}
       </div>
 
       <div className="movie-card__info">
@@ -53,6 +100,6 @@ function MovieCard({ movie, onClick }) {
       </div>
     </div>
   );
-}
+});
 
 export default MovieCard;
