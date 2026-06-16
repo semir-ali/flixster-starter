@@ -39,6 +39,22 @@ function FeaturedMovie({ onMovieClick }) {
     fetchFeaturedMovies();
   }, [API_KEY]);
 
+  // Auto-advance to the next slide every 6 seconds.
+  // Resetting on currentIndex change keeps a full interval after manual navigation.
+  useEffect(() => {
+    if (featuredMovies.length <= 1) {
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === featuredMovies.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 6000);
+
+    return () => clearInterval(timer);
+  }, [currentIndex, featuredMovies.length]);
+
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? featuredMovies.length - 1 : prevIndex - 1

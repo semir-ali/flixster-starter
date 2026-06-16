@@ -1,0 +1,42 @@
+/* Hidden on desktop; the top header nav is used there instead. */
+.bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: #1a1a1a;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .bottom-nav-link {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    padding: 0.65rem 0.25rem;
+    transition: color 0.15s;
+  }
+
+  .bottom-nav-link:hover {
+    color: #fff;
+  }
+
+  .bottom-nav-link.active {
+    color: #e50914;
+  }
+}

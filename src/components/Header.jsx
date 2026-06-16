@@ -8,36 +8,33 @@ function Header() {
     <header className="header">
       <div className="header-content">
         <Link to="/" className="header-logo">
-          <span className="logo-icon">🎬</span>
-          <span className="logo-text">Flixster</span>
+          <span className="logo-text">
+            <span className="logo-flix">Flix</span><span className="logo-ster">ster</span>
+          </span>
         </Link>
         <nav className="header-nav">
           <Link
             to="/"
             className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
           >
-            <span className="nav-icon">🏠</span>
             Home
           </Link>
           <Link
             to="/search"
             className={`nav-link ${location.pathname === '/search' ? 'active' : ''}`}
           >
-            <span className="nav-icon">🔍</span>
             Search
           </Link>
           <Link
             to="/favorites"
             className={`nav-link ${location.pathname === '/favorites' ? 'active' : ''}`}
           >
-            <span className="nav-icon">❤️</span>
             Favorites
           </Link>
           <Link
             to="/watched"
             className={`nav-link ${location.pathname === '/watched' ? 'active' : ''}`}
           >
-            <span className="nav-icon">✓</span>
             Watched
           </Link>
         </nav>

@@ -20,23 +20,19 @@
   gap: 0.5rem;
 }
 
-.logo-icon {
-  font-size: 1.5rem;
-  background: #e50914;
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .logo-text {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #e50914;
   letter-spacing: -0.5px;
   text-transform: uppercase;
+}
+
+.logo-flix {
+  color: #fff;
+}
+
+.logo-ster {
+  color: #e50914;
 }
 
 .header-nav {
@@ -75,17 +71,9 @@
     height: 56px;
   }
 
+  /* On mobile the nav lives in the fixed BottomNav bar instead. */
   .header-nav {
-    gap: 1rem;
-  }
-
-  .nav-link {
-    font-size: 0;
-    padding: 0.5rem;
-  }
-
-  .nav-icon {
-    font-size: 1.25rem;
+    display: none;
   }
 
   .logo-text {

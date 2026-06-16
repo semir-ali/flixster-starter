@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header';
+import BottomNav from './components/BottomNav';
 import MovieModal from './components/MovieModal';
 import Footer from './components/Footer';
 import GenreOnboarding from './components/GenreOnboarding';
@@ -38,15 +39,15 @@ const App = () => {
     }
   }, []);
 
-  const handleMovieClick = useCallback((movieId) => {
+  const handleMovieClick = (movieId) => {
     setSelectedMovieId(movieId);
-  }, []);
+  };
 
-  const handleCloseModal = useCallback(() => {
+  const handleCloseModal = () => {
     setSelectedMovieId(null);
-  }, []);
+  };
 
-  const handleToggleFavorite = useCallback((movieId) => {
+  const handleToggleFavorite = (movieId) => {
     setFavorites(prevFavorites => {
       const newFavorites = prevFavorites.includes(movieId)
         ? prevFavorites.filter(id => id !== movieId)
@@ -55,9 +56,9 @@ const App = () => {
       saveFavorites(newFavorites);
       return newFavorites;
     });
-  }, []);
+  };
 
-  const handleToggleWatched = useCallback((movieId) => {
+  const handleToggleWatched = (movieId) => {
     setWatched(prevWatched => {
       const newWatched = prevWatched.includes(movieId)
         ? prevWatched.filter(id => id !== movieId)
@@ -66,19 +67,19 @@ const App = () => {
       saveWatched(newWatched);
       return newWatched;
     });
-  }, []);
+  };
 
-  const handleOnboardingComplete = useCallback((selectedGenres) => {
+  const handleOnboardingComplete = (selectedGenres) => {
     setUserGenres(selectedGenres);
     saveGenres(selectedGenres);
     setShowOnboarding(false);
-  }, []);
+  };
 
-  const handleOnboardingSkip = useCallback((defaultGenres) => {
+  const handleOnboardingSkip = (defaultGenres) => {
     setUserGenres(defaultGenres);
     saveGenres(defaultGenres);
     setShowOnboarding(false);
-  }, []);
+  };
 
   return (
     <BrowserRouter>
@@ -139,6 +140,7 @@ const App = () => {
           </Routes>
         </main>
         <Footer />
+        <BottomNav />
 
         {selectedMovieId && (
           <MovieModal
