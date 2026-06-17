@@ -1,11 +1,11 @@
-import { useState, useEffect, memo } from 'react';
+import { useState, useEffect } from 'react';
 import MovieCard from '../components/MovieCard';
 import LoadMoreButton from '../components/LoadMoreButton';
 import SearchBar from '../components/SearchBar';
 import SortDropdown from '../components/SortDropdown';
 import '../components/MovieList.css';
 
-const SearchPage = memo(function SearchPage({ onMovieClick, favorites, watched, onToggleFavorite, onToggleWatched }) {
+function SearchPage({ onMovieClick, favorites, watched, onToggleFavorite, onToggleWatched }) {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -201,6 +201,6 @@ const SearchPage = memo(function SearchPage({ onMovieClick, favorites, watched, 
       )}
     </>
   );
-});
+}
 
 export default SearchPage;
