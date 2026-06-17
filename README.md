@@ -6,7 +6,7 @@ Submitted by: Semir Ali
 
 Estimated time spent: 15 hours spent in total
 
-Deployed Application (optional): [Flixster Deployed Site]([ADD_LINK_HERE](https://flixster-starter-project-2.onrender.com/))
+Deployed Application (optional): https://flixster-starter-project-2.onrender.com/
 
 ### Application Features
 
