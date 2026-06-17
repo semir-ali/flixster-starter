@@ -263,7 +263,7 @@
 
 .actor-modal-error-close:hover {
   border-color: #e50914;
-  color: #e50914;
+  color: #ff453a;
 }
 
 @media (max-width: 768px) {

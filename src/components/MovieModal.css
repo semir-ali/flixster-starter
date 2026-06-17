@@ -245,7 +245,7 @@
 }
 
 .modal-ai-header h3 {
-  color: #e50914;
+  color: #ff453a;
   font-weight: 700;
   font-size: 0.95rem;
   margin: 0;
@@ -486,7 +486,7 @@
 
 .modal-error-close:hover {
   border-color: #e50914;
-  color: #e50914;
+  color: #ff453a;
 }
 
 @media (max-width: 768px) {

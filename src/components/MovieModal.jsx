@@ -240,7 +240,7 @@ function MovieModal({ movieId, onClose, onMovieClick }) {
     if (!minutes) return null;
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    return `${hours}h ${mins}m`;
+    return `${hours}h ${mins}m (${minutes} min)`;
   };
 
   const formatDate = (dateString) => {
