@@ -1,27 +1,34 @@
+/* Vertical sidebar navigation (desktop). On mobile this is hidden and the
+   fixed BottomNav takes over instead. */
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 220px;
   background: #1a1a1a;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 100;
+  overflow-y: auto;
 }
 
 .header-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 60px;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 1.5rem 0;
+  height: 100%;
 }
 
 .header-logo {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  padding: 0 1.5rem 1.75rem;
 }
 
 .logo-text {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: -0.5px;
   text-transform: uppercase;
@@ -37,28 +44,33 @@
 
 .header-nav {
   display: flex;
-  gap: 2rem;
-  align-items: center;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: stretch;
 }
 
 .nav-link {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   color: #9ca3af;
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 500;
-  transition: color 0.15s;
-  padding: 0.5rem 0;
+  transition: color 0.15s, background 0.15s;
+  padding: 0.75rem 1.5rem;
+  border-left: 3px solid transparent;
 }
 
 .nav-link:hover {
   color: #fff;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .nav-link.active {
   color: #ff453a;
+  border-left-color: #ff453a;
+  background: rgba(255, 69, 58, 0.08);
 }
 
 .nav-icon {
@@ -66,17 +78,8 @@
 }
 
 @media (max-width: 768px) {
-  .header-content {
-    padding: 0 1rem;
-    height: 56px;
-  }
-
   /* On mobile the nav lives in the fixed BottomNav bar instead. */
-  .header-nav {
+  .header {
     display: none;
-  }
-
-  .logo-text {
-    font-size: 1.1rem;
   }
 }
